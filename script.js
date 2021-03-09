@@ -1,115 +1,60 @@
-const button=document.getElementById("button");
-const list= document.querySelector(".list");
-const addedItem = document.querySelector("input");
-const panal=document.getElementsByClassName("panel")[0];
-const divData=document.getElementById('app');
+document.getElementById("button")
+.addEventListener("click", () => { 
+  const todoInput = document.getElementById("todo"); 
+  const text = todoInput.value; 
 
+  if (text === '') { 
+    alert('please enter in a todo'); 
+    return; 
+  }
 
-//data entry options 
-divData.addEventListener("keyup" ,e=>{
-   if (e.key=="Enter" && addedItem.value!=="") {
- const li=listBuilder(addedItem.value);
-cycleRest(li);
-   }
-})
+  const todo = createTodo(text); 
 
-button.addEventListener("click", e=>{
-   if(addedItem.value==""){
-      alert("please enter todo");
-   }
-   else{
-   const li=listBuilder(addedItem.value);
-   cycleRest(li);
-   }
+  document.querySelector('.list')
+  .append(todo); 
+  todoInput.value = ''; 
 })
 
 
-//list button logic controlls
-list.addEventListener("click", e=>{
-   let option= e.target;
-   let liItem= option.parentNode;
+function createTodo(text) { 
+  const todoListItem = document.createElement('li'); 
+  const todoParagraph = createTodoParagraph(text);
+  const deleteButton = createDeleteButton(todoListItem); 
 
-   switch(option.className){   
-   case "delete":{
-      list.removeChild(liItem);
-      break
-      }
-      
-   case"complete":{
-      if(option.checked){
-      liItem.style.textDecoration ="line-through";
-      liItem.style.textDecorationThickness="18%";
-      liItem.style.textDecorationColor ="red";
-   }
-   else{
-      liItem.style.textDecoration="none";
-   }
-   break;
-   }
+  todoListItem.append(todoParagraph); 
+  todoListItem.append(deleteButton); 
+  
+  return todoListItem; 
+}
 
-   case "edit":{
-      let newInput= document.createElement("input")
-      newInput.className="replace listed-item"
-      
-      newInput.addEventListener("keyup", e=>{
-      if(e.key=="Enter"){      
-         let newEdit= listBuilder(e.target.value);
-         list.replaceChild(newEdit,newInput)
-      }
-   })
-      list.replaceChild(newInput,liItem);
-      break;
-   }
-}});
+function createTodoParagraph(text) { 
+  const todoParagraph = document.createElement('p'); 
+  todoParagraph.textContent = text; 
 
-panal.addEventListener("click", e=>{
-   let option = e.target;
-   let listItems=document.getElementsByClassName("listed-item");
-   let checkBoxes=document.getElementsByClassName('complete');
-   
-   if(option.innerText=="clear"){   
-   for(let i=listItems.length-1;i>=0;i--){
-      list.removeChild(listItems[i]);
-   }}
-   if(option.innerText=="finished"){
-   
-      for(let i=checkBoxes.length-1; i>=0;i--){
-         if(checkBoxes[i].checked==true){
-            list.removeChild(checkBoxes[i].parentElement);
-         }
-      }
-   }
-});
+  todoParagraph.addEventListener('click', () => { 
+      todoParagraph.classList.toggle('completed'); 
+  })
+
+  return todoParagraph; 
+}
 
 
-function listBuilder(value){
-let item=document.createElement("li");
-let remover = document.createElement("button");
-let edit= document.createElement("button");
-let completer = document.createElement("input");
+function createDeleteButton(todo) { 
+  const deleteButton = document.createElement('button'); 
+  deleteButton.textContent = 'delete'; 
 
-remover.type="button";
-remover.className="delete";
-remover.innerText="remove";
+  deleteButton.addEventListener('click', () => { 
+    todo.remove(); 
+  })
 
-completer.type="checkbox";
-completer.className="complete";
-
-edit.type="button";
-edit.className="edit"
-edit.innerText="edit";
-
-item.innerText=value;
-item.className="listed-item";
-item.appendChild(remover);
-item.appendChild(edit);
-item.appendChild(completer);
-return item;
+  return deleteButton; 
 }
 
 
 
-function cycleRest(item){
-list.appendChild(item);
-addedItem.value=""
-}
+//get user input (done)
+//create todo (done)
+//add user input to todo (done)
+//create a delete button (done)
+//create a way to toggle a todo (done)
+//append it to the todos list (done)
